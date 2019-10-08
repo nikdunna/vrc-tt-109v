@@ -1,31 +1,75 @@
 #include "main.h"
+static lv_obj_t * background;
 
-/**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
- *
- * If no competition control is connected, this function will run immediately
- * following initialize().
- *
- * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
- */
-void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr(1);
-	pros::Motor right_mtr(2);
-	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
 
-		left_mtr = left;
-		right_mtr = right;
-		pros::delay(20);
+
+inline void intake()
+	{
+	   if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
+	   {
+		   rightIn = -127;
+		   leftIn = 127;
+	   }
+	   else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+	   {
+		   rightIn = 127;
+		   leftIn = -127;
+	   }
+	}
+
+
+
+
+
+void opcontrol()
+{ 
+	robotChassis.stop();
+	/* 
+	//CATA//
+	pros::Task activityCata(cataActivity, NULL);
+	pros::Task visAutoAim(visionAim, NULL);
+	/* 
+	//LVGL//
+  background = lv_page_create(NULL, NULL);
+  lv_scr_load(background);
+
+   /* Creates Tab View 
+    lv_obj_t * tabViewOne = lv_tabview_create(background, NULL);
+    lv_tabview_add_tab(tabViewOne, "Motor Values");
+    lv_tabview_add_tab(tabViewOne, "Sensor Values");
+	lv_obj_set_size(tabViewOne, LV_HOR_RES, LV_VER_RES);
+	/*
+    //Left Drive Creation
+	lv_obj_t * leftDriveLab = lv_label_create(tabViewOne, NULL);
+	lv_obj_align(leftDriveLab, label, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0);
+    lv_obj_set_height(leftDriveLab, 80);
+
+
+*/
+
+	
+
+
+
+	while (true)
+	{
+		//LVGL//
+
+
+		//DRIVE
+		
+      robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+		
+
+		//TILT
+		int inSpeedNormal = master.get_analog(ANALOG_RIGHT_Y);
+		int inSpeedFast = master.get_analog(ANALOG_RIGHT_X);
+		tilt = inSpeedNormal;
+
+		//INTAKE
+		intake();
+    
+
+
 	}
 }

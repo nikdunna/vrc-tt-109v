@@ -28,11 +28,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/opcontrol.cpp.o",
-            "src\\opcontrol.cpp"
+            "bin/motor.cpp.o",
+            "src\\motor.cpp"
         ],
-        "directory": "C:\\Users\\nikdu\\Documents\\github\\vrc-tt-109v\\vrc-tt-109v",
-        "file": "src\\opcontrol.cpp"
+        "directory": "C:\\Users\\nikdu\\Documents\\github\\vrc-tt-109v",
+        "file": "src\\motor.cpp"
     },
     {
         "arguments": [
@@ -66,7 +66,7 @@
             "bin/initialize.cpp.o",
             "src\\initialize.cpp"
         ],
-        "directory": "C:\\Users\\nikdu\\Documents\\github\\vrc-tt-109v\\vrc-tt-109v",
+        "directory": "C:\\Users\\nikdu\\Documents\\github\\vrc-tt-109v",
         "file": "src\\initialize.cpp"
     },
     {
@@ -98,10 +98,10 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "bin/autonomous.cpp.o",
-            "src\\autonomous.cpp"
+            "bin/opcontrol.cpp.o",
+            "src\\opcontrol.cpp"
         ],
-        "directory": "C:\\Users\\nikdu\\Documents\\github\\vrc-tt-109v\\vrc-tt-109v",
-        "file": "src\\autonomous.cpp"
+        "directory": "C:\\Users\\nikdu\\Documents\\github\\vrc-tt-109v",
+        "file": "src\\opcontrol.cpp"
     }
 ]

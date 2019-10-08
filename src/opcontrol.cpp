@@ -1,28 +1,22 @@
 #include "main.h"
-static lv_obj_t * background;
-
-
+static lv_obj_t *background;
 
 inline void intake()
+{
+	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
 	{
-	   if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
-	   {
-		   rightIn = -127;
-		   leftIn = 127;
-	   }
-	   else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
-	   {
-		   rightIn = 127;
-		   leftIn = -127;
-	   }
+		rightIn = -127;
+		leftIn = 127;
 	}
-
-
-
-
+	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+	{
+		rightIn = 127;
+		leftIn = -127;
+	}
+}
 
 void opcontrol()
-{ 
+{
 	robotChassis.stop();
 	/* 
 	//CATA//
@@ -47,19 +41,13 @@ void opcontrol()
 
 */
 
-	
-
-
-
 	while (true)
 	{
 		//LVGL//
 
-
 		//DRIVE
-		
-      robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
-		
+
+		robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
 
 		//TILT
 		int inSpeedNormal = master.get_analog(ANALOG_RIGHT_Y);
@@ -68,8 +56,5 @@ void opcontrol()
 
 		//INTAKE
 		intake();
-    
-
-
 	}
 }

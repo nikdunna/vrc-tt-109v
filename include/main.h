@@ -35,9 +35,9 @@
 #define PROS_USE_LITERALS
 
 #include "okapi/api.hpp"
+using namespace okapi;
 #include "api.h"
 
-using namespace okapi;
 #include "motor.hpp"
 #include "display/lvgl.h"
 //#include "pros/api_legacy.h"

@@ -7,16 +7,12 @@
 //DEFS//
 
 //Motors
-/*
-extern pros::Motor frontRight;
-extern pros::Motor frontLeft;
-extern pros::Motor backRight;
-extern pros::Motor backLeft;
-*/
+
 extern MotorGroup left;
 extern MotorGroup right;
 
-extern pros::Motor twoBar;
+//extern pros::Motor twoBar;
+extern Motor twoBar;
 extern pros::Motor rightIn;
 extern pros::Motor leftIn;
 extern pros::Motor tilt;
@@ -37,10 +33,12 @@ extern AsyncMotionProfileController profileController;
 
 
 //FUNCTIONS//
-
+void move2bMac(void *x);
+void tiltMac(void *flob);
 void driveSpeed(int iSpeed);
 void turnLeft(int iSpeed);
 void turnRight(int iSpeed);
 void encoderReset();
 void lcdAuton();
+
 #endif

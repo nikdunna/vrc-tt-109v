@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/include/okapi/api.hpp"
+                "${workspaceFolder}/include/main.h"
             ],
             "defines": [
                 "_DEBUG",

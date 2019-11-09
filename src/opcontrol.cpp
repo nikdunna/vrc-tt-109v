@@ -24,6 +24,7 @@ inline void intake()
 
 inline void arm()
 {
+
 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
 	{
 		twoBar.moveVelocity(-200);
@@ -32,10 +33,15 @@ inline void arm()
 	{
 		twoBar.moveVelocity(200);
 	}
+	else if(twoBar.getPosition() < -100)
+	{
+		twoBar.setBrakeMode(AbstractMotor::brakeMode::brake); //hold
+	}
 	else
 	{
-		twoBar.moveVelocity(-1);
+		twoBar.moveVelocity(0);
 	}
+	
 	
 }
 
@@ -48,9 +54,11 @@ void opcontrol()
     //int tiltSpeed;
 
 	pros::Task tilterMac(tiltMac, NULL, "Tilt");
-	//pros::Task twoBarMac(move2bMac, NULL, "2b");
+	pros::Task twoBarMacHigh(move2bMac, NULL, "2b");
+	pros::Task twoBarMacLow(move2bMacLow, NULL, "2bLow");
 
-	while (true)
+
+	while(true)
 	{
 		//std::cout << "Tilt Position: " << tilt.get_position();
 		std::cout << "Arm Position: " << twoBar.getPosition() << "\n";
@@ -72,10 +80,44 @@ void opcontrol()
 		}*/
 		
 		//PID TEST
-		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_A))
-		{
-			robotChassis.moveDistance(2_ft);
-		}
+		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
+	{
+		/*
+			while(tilt.get_position() > -640 || twoBar.getPosition() > -300)
+  		{
+			if(tilt.get_position() > -640)
+			{
+				tilt = -127;
+			}
+			pros::delay(400);
+			if(twoBar.getPosition() > -300)
+			{
+				twoBar.moveVelocity(-200);
+			}
+  			
+  			pros::delay(10);
+			  
+			
+  		}
+  		tilt = 0;
+		twoBar.moveVelocity(0);
+		while(tilt.get_position() > -1400)
+  		{
+  			tilt = -127;
+  			pros::delay(10);
+  		}
+		/*
+		robotChassis.moveDistanceAsync(3.6_ft);
+		rightIn = -127;
+		leftIn = 127;
+		*/ 
+	robotChassis.setMaxVelocity(100);
+	tilt = 7;
+	rightIn = -127;
+	leftIn = 127;
+  robotChassis.moveDistance(5.5_ft);
+  robotChassis.setMaxVelocity(200);
+	}
 		else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B))
 		{
 			robotChassis.setMaxVelocity(150);

@@ -34,6 +34,7 @@ extern AsyncMotionProfileController profileController;
 
 //FUNCTIONS//
 void move2bMac(void *x);
+void move2bMacLow(void *x);
 void tiltMac(void *flob);
 void driveSpeed(int iSpeed);
 void turnLeft(int iSpeed);

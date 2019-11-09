@@ -8,7 +8,7 @@
 pros::Motor tilt(2, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
 //pros::Motor twoBar(3, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
 pros::Motor rightIn(4, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor leftIn(19, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor leftIn(7, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 Motor twoBar(15);
 
 
@@ -28,9 +28,9 @@ MotorGroup right = MotorGroup({-11, -1});
 //DEFINE CHASSIS//
 ChassisControllerPID robotChassis = ChassisControllerFactory::create(
   left, right,
-  IterativePosPIDController::Gains{0.003, 0, 0.00015}, //0.001, 0.0005, 0.00005      0.7...0.0003
+  IterativePosPIDController::Gains{0.005, 0.004, 0.00015}, //0.001, 0.0005, 0.00005      0.7...0.0003
   IterativePosPIDController::Gains{0, 0, 0},
-  IterativePosPIDController::Gains{0.009, 0.0008, 0.00025}, //0.005 , 0.000031, 0.00026
+  IterativePosPIDController::Gains{0.009, 0.0016, 0.00025}, //0.005 , 0.000031, 0.00026
   AbstractMotor::gearset::green,
   {4_in, 9_in}
 );
@@ -42,6 +42,9 @@ AsyncMotionProfileController profileController = AsyncControllerFactory::motionP
   4.0, // Maximum linear jerk of the Chassis in m/s/s/s
   robotChassis // Chassis Controller
 );
+
+
+
 
 
 
@@ -89,45 +92,111 @@ void encoderReset()
 */
 
 
+/*int toggle() {
+  static bool lowTower = false;
+
+  while (true) {
+
+    if (Controller1.ButtonL2.pressing() && hit == false) {
+
+      hit = 1;
+      vex::task::stop(moveArmHigh);
+      vex::task::stop(moveArmDownHigh);
+
+      lowTower = !lowTower;
+      switchMode = !switchMode;
+
+      if (lowTower == true) {
+        vex::task::stop(moveArmDown);
+        vex::task h = vex::task(moveArm);
+      }
+
+      else {
+        vex::task::stop(moveArm);
+        vex::task n = vex::task(moveArmDown);
+      }
+    }
+
+    if (!Controller1.ButtonL2.pressing() && hit == 1) {
+      hit = 0;
+    }
+    task::sleep(10);
+  }
+}*/
 
 void move2bMac(void *x)
 {
-    int hitNum = 0;
+    
+    bool hit;
+    bool lowTower;
     while(true)
     {
-       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && hitNum == 0)
+       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !hit )
        {
-           hitNum = 1;
-           twoBar.moveVelocity(0);
-           pros::delay(40);
-           twoBar.moveRelative(-850, 200);
+             hit = 1;
+
+      lowTower = !lowTower;
+      
+      if(lowTower)
+      {
+         twoBar.moveAbsolute(-830, 200);
+      }
+      else
+      {
+          twoBar.moveAbsolute(-5, 170);
+      }
+      
        }
-       else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && hitNum == 1)
-       {
-           hitNum = 0;
-           twoBar.moveVelocity(0);
-           pros::delay(40);
-           twoBar.moveRelative(-849, -20);
-           
-       }
-       /*
-       if(hitNum == 0)
-       {
-           twoBar.moveAbsolute(700, 20);
-       }
-       /*
-       else if(hitNum == 1)
-       {
-           twoBar.moveAbsolute(-850, 200);
-       }
-*/
+
+    if(!(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) && hit)
+    {
+        hit = 0;
     }
+
+
+    }
+    
        
 }
 
+void move2bMacLow(void *x)
+{
+    
+    bool hit;
+    bool lowTower;
+    while(true)
+    {
+       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !hit )
+       {
+             hit = 1;
+
+      lowTower = !lowTower;
+      
+      if(lowTower)
+      {
+         twoBar.moveAbsolute(-560, 200);
+      }
+      else
+      {
+          twoBar.moveAbsolute(-5, 170);
+      }
+      
+       }
+
+    if(!(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) && hit)
+    {
+        hit = 0;
+    }
+
+
+    }
+    
+       
+}
 
 void tiltMac(void *flob)
 {
+    
     int tiltSpeed;
     bool hit;
     while(true)
@@ -141,20 +210,32 @@ void tiltMac(void *flob)
              tilt = -127;
              pros::delay(10);
            }
-           while(tilt.get_position() < -1500 && tilt.get_position() > -1600 && hit)
+           while(tilt.get_position() < -1400 && tilt.get_position() > -1500 && hit)
            {
-               tilt = -100;
+               tilt = -60;
                pros::delay(10);
            }
            hit = false;
         } 
+      else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT))
+        {
+           hit = true;
+           while(tilt.get_position() > -640 && hit)
+           {
+             tilt = -127;
+             pros::delay(10);
+           }
+           hit = false;
+        }
+      
 	    else if(tilt.get_position() < -720)
 		{
-			tilt = -tiltSpeed;
+			tilt = -tiltSpeed/ 1.5;
 		}
 		else
 		{
 			tilt = -tiltSpeed  + 7;
 		}
     }
+    
 }

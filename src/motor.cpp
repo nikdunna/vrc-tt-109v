@@ -5,11 +5,12 @@
 //pros::Vision visSensor(19, pros::vision_zero(1));
 
 //Motors
-pros::Motor tilt(2, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor tilt(12, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
 //pros::Motor twoBar(3, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
-pros::Motor rightIn(4, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor rightIn(15, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor leftIn(7, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-Motor twoBar(15);
+Motor tilter(12);
+Motor twoBar(16);
 
 
 //Controller (Defined two times for okapi uses)
@@ -22,15 +23,15 @@ Controller controller;
 
 
 //Drive Motors
-MotorGroup left = MotorGroup({9, 10});
-MotorGroup right = MotorGroup({-11, -1});
+MotorGroup left = MotorGroup({18, 17});
+MotorGroup right = MotorGroup({-13, -14});
 
 //DEFINE CHASSIS//
 ChassisControllerPID robotChassis = ChassisControllerFactory::create(
   left, right,
   IterativePosPIDController::Gains{0.005, 0.004, 0.00015}, //0.001, 0.0005, 0.00005      0.7...0.0003
   IterativePosPIDController::Gains{0, 0, 0},
-  IterativePosPIDController::Gains{0.009, 0.0016, 0.00025}, //0.005 , 0.000031, 0.00026
+  IterativePosPIDController::Gains{0.0066, 0, 0}, //0.0056 , 0.0057, 0
   AbstractMotor::gearset::green,
   {4_in, 9_in}
 );
@@ -131,7 +132,7 @@ void move2bMac(void *x)
     bool lowTower;
     while(true)
     {
-       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && !hit )
+       if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2) && !hit)
        {
              hit = 1;
 
@@ -139,16 +140,17 @@ void move2bMac(void *x)
       
       if(lowTower)
       {
-         twoBar.moveAbsolute(-830, 200);
+         moveToHigh();
+         
       }
       else
       {
-          twoBar.moveAbsolute(-5, 170);
+          twoBar.moveAbsolute(-1, 170);
       }
       
        }
 
-    if(!(master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) && hit)
+    if(!(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) && hit)
     {
         hit = 0;
     }
@@ -158,7 +160,19 @@ void move2bMac(void *x)
     
        
 }
-
+/*
+void moveToLow()
+{
+  tilterMac.suspend();
+  while(tilt.get_position() > -200)
+           {
+             tilter.moveVelocity(-200);
+             pros::delay(10);
+           }
+         twoBar.moveAbsolute(-570, 200);
+  tilterMac.resume();
+}
+*/
 void move2bMacLow(void *x)
 {
     
@@ -166,7 +180,8 @@ void move2bMacLow(void *x)
     bool lowTower;
     while(true)
     {
-       if(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && !hit )
+      
+       if(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1) && !hit )
        {
              hit = 1;
 
@@ -174,16 +189,16 @@ void move2bMacLow(void *x)
       
       if(lowTower)
       {
-         twoBar.moveAbsolute(-560, 200);
+        moveToLow();
       }
       else
-      {
-          twoBar.moveAbsolute(-5, 170);
+      {  
+        twoBar.moveAbsolute(-1, 170);
       }
       
        }
 
-    if(!(master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) && hit)
+    if(!(master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) && hit)
     {
         hit = 0;
     }
@@ -201,6 +216,7 @@ void tiltMac(void *flob)
     bool hit;
     while(true)
     {
+     
         tiltSpeed = master.get_analog(ANALOG_RIGHT_Y);
      if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP))
         {
@@ -220,7 +236,7 @@ void tiltMac(void *flob)
       else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT))
         {
            hit = true;
-           while(tilt.get_position() > -640 && hit)
+           while(tilt.get_position() > -300 && hit)
            {
              tilt = -127;
              pros::delay(10);
@@ -228,14 +244,25 @@ void tiltMac(void *flob)
            hit = false;
         }
       
-	    else if(tilt.get_position() < -720)
+	    else if(tilt.get_position() < -500)
 		{
-			tilt = -tiltSpeed/ 1.5;
+			tilt = -tiltSpeed / 1.5;
 		}
-		else
+      else
 		{
-			tilt = -tiltSpeed  + 7;
+			tilt = -tiltSpeed;
 		}
+  
+         if(tilt.get_position() < -680 && tiltSpeed > 3)
+        {
+
+            tilt = 0;
+        }
+        else if(tilt.get_position() > -10)
+        {
+          tilt = 3;
+        }
+		
     }
     
 }

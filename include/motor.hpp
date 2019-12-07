@@ -13,12 +13,15 @@ extern MotorGroup right;
 
 //extern pros::Motor twoBar;
 extern Motor twoBar;
+extern Motor tilter;
 extern pros::Motor rightIn;
 extern pros::Motor leftIn;
 extern pros::Motor tilt;
 //Controllers
 extern pros::Controller master;
 extern Controller controller;
+
+
 
 //GLOBAL VARIABLES
 extern int driveGet();
@@ -41,5 +44,8 @@ void turnLeft(int iSpeed);
 void turnRight(int iSpeed);
 void encoderReset();
 void lcdAuton();
+void moveToLow();
+void moveToHigh();
+void resumeTilt();
 
 #endif

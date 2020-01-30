@@ -5,13 +5,13 @@ inline void intake()
 {
 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
 	{
-		rightIn = -200;
-		leftIn = 200;
+		rightIn = -100;
+		leftIn = 100;
 	}
 	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
 	{
-		rightIn = 200;
-		leftIn = -200;
+		rightIn = 100;
+		leftIn = -100;
 	}
 	else if(tilt.get_position() > -50)
 	{
@@ -32,30 +32,38 @@ inline void arm()
 
 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1))
 	{
-		twoBar.moveVelocity(-200);
+		twoBar.move(-200);
 	}
 	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2))
 	{
-		twoBar.moveVelocity(200);
+		twoBar.move(200);
 	}
-	else if(twoBar.getPosition() < -100)
+  /*
+	else if(twoBar.get_position() < -100)
 	{
-		twoBar.setBrakeMode(AbstractMotor::brakeMode::brake); //hold
+		//twoBar.set_brake_mode(AbstractMotor::brakeMode::brake); //hold
 	}
-	else
+  */
+	else if(fabs(twoBar.get_position()) < 200)
 	{
-		twoBar.moveVelocity(0);
+		twoBar.move(10);
 	}
+  else
+  {
+    twoBar.move(-10);
+  }
+  
 	
 	
 }
-pros::Task tilterMac(tiltMac, NULL, "Tilt");
+/*
+
 void moveToLow()
 {
   tilterMac.suspend();
   while(tilt.get_position() > -200)
            {
-             tilter.moveVelocity(-175);
+             tilter.move(-175);
              pros::delay(10);
            }
          twoBar.moveAbsolute(-570, 200);
@@ -74,42 +82,88 @@ void moveToHigh()
 		 pros::delay(150);
   tilterMac.resume();
 }
+*/
 
 
     
 void opcontrol()
 {
+    bool liftTop = false;
+	bool liftMid = false;
+	bool liftBottom = true;
 	robotChassis.stop();
     //int tiltSpeed;
-	
-pros::Task twoBarMacHigh(move2bMac, NULL, "2b");
-pros::Task twoBarMacLow(move2bMacLow, NULL, "2bLow");
+	//pros::Task tilterMac(tiltMac, NULL, "Tilt");
+//pros::Task twoBarMacHigh(move2bMac, NULL, "2b");
+//pros::Task twoBarMacLow(move2bMacLow, NULL, "2bLow");
 
-	
+	int tiltSpeed;
 
-bool hitted;
+
 	while(true)
 	{
-		std::cout << "Tilt Position: " << tilt.get_position()  << "bruh\n";
-		//std::cout << "Arm Position: " << twoBar.getPosition() << "\n";
+		//std::cout << "Tilt Position: " << tilt.get_position()  << "bruh\n";
+		std::cout << "Arm Position: " << twoBar.get_position() << "\n";
 		
+    //Deploy
+    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_UP))
+    {
+      rightIn = 200;
+		  leftIn = -200;
+      pros::delay(400);
+      twoBar.move(-127);
+      pros::delay(100);
+      pros::delay(500);
+      twoBar.move(0);
+      pros::delay(50);
+      twoBar.move(100);
+      pros::delay(500);
+      rightIn = 0;
+		  leftIn = 0;
+      twoBar.move(0);
+    }
 	
 		//DRIVE
 
 		robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
-/*
+
 		//TILT
-		tiltSpeed = master.get_analog(ANALOG_RIGHT_Y);
-	    if(tilt.get_position() < -720)
+	/*
+	    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
 		{
-			tilt = -tiltSpeed;
+			tilt.move_velocity(-200);
+		}
+		else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN))
+		{
+			tilt.move_velocity(200);
 		}
 		else
 		{
-			tilt = -tiltSpeed  + 7;
-		}*/
-		
+			tilt.move_velocity(0);
+		}
+		*/
+
+       tiltSpeed = master.get_analog(ANALOG_RIGHT_Y);
+			
+      if(tilt.get_position() < -1620)
+      {
+        tilt = 0;
+      }
+      else if(tilt.get_position() < -540)
+      {
+        tilt = -tiltSpeed / 1.5 ;
+      }
+      else
+      {
+        tilt = -tiltSpeed;
+      }
+      
+      
+	
+
+
 		//PID TEST
+		/*
 		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
 	{
 		/*
@@ -117,69 +171,141 @@ bool hitted;
   robotChassis.setMaxVelocity(200);
   */
  
-  hitted = true;
- while(tilt.get_position() > -500 && hitted)
-           {
-             tilt = -127;
-             pros::delay(10);
-           }
-		   hitted = false;
-		   /*
-           while(tilt.get_position() < -700 && tilt.get_position() > -800)
-           {
-               tilt = -60;
-               pros::delay(10);
-           }
-		   */
-		}
-		else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_B))
-		{
-			/*
-			robotChassis.setMaxVelocity(100);
-			robotChassis.turnAngle(90_deg);
-			robotChassis.setMaxVelocity(200);
-			*/
-		 robotChassis.setMaxVelocity(100);
-	tilt = 7;
-	rightIn = -127;
-	leftIn = 127;
-  robotChassis.moveDistance(3.5_ft);
-  //robotChassis.setMaxVelocity(200);
-  rightIn = -127;
-  leftIn = 127;
-  pros::delay(200);
-  rightIn = 0;
-  leftIn = 0;
-  robotChassis.moveDistance(-2.5_ft);
-  right.moveVelocity(-100);
-		left.moveVelocity(100);
-		pros::delay(490);
-		right.moveVelocity(50);
-		left.moveVelocity(-50);
-		pros::delay(120);
-		right.moveVelocity(0);
-		left.moveVelocity(0);
-    pros::delay(100);
-    robotChassis.moveDistance(1.25_ft);
-	pros::delay(50);
-	
-	while(tilt.get_position() > -700)
-           {
-             tilt = -127;
-             pros::delay(10);
-           }
-    while(tilt.get_position() < -700 && tilt.get_position() > -800)
-           {
-               tilt = -60;
-               pros::delay(10);
-           }
-		}
-		
-
 		//INTAKE
 		intake();
 
 		//ARM
-		//arm();
+		arm();
+/*
+//bottom or mid to top
+//twoBar.move(0);
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && (liftTop == false))
+{
+	robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+ tilt.move(-9);
+ while(fabs(twoBar.get_position()) <= 1500)
+ {
+   robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+   if(fabs(twoBar.get_position()) <= 1300)
+   {
+     twoBar.move(-127);
+   }
+   else if(fabs(twoBar.get_position()) <= 1400)
+   {
+     twoBar.move(-100);
+   }
+   else
+   {
+     twoBar.move(-70);
+   }
+ }
+tilt.move(9);
+twoBar.move(0);
+ liftBottom = false;
+liftMid = false;
+ liftTop = true;
+}
+
+//top to bottom
+else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) && (liftTop == true))
+{
+ robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+ tilt.move(-9);
+ while(fabs(twoBar.get_position()) >= 150)
+ {
+   robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+   if(fabs(twoBar.get_position()) >= 500)
+   {
+     twoBar.move(127);
+   }
+   else if(fabs(twoBar.get_position()) >= 400)
+   {
+     twoBar.move(60);
+   }
+   else
+   {
+     twoBar.move(30);
+   }
+ }
+tilt.move(9);
+twoBar.move(0);
+ liftBottom = true;
+liftMid = false;
+ liftTop = false;
+}
+
+//bottom to mid
+ if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && (liftMid == false))
+{
+ robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+ tilt.move(-9);
+ while(fabs(twoBar.get_position()) <= 1200)
+ {
+   robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+   if(fabs(twoBar.get_position()) <= 1000)
+   {
+     twoBar.move(-127);
+   }
+   else if(fabs(twoBar.get_position()) <= 1100)
+   {
+     twoBar.move(-100);
+   }
+   else
+   {
+     twoBar.move(-70);
+   }
+ }
+ 
+while(fabs(twoBar.get_position()) >= 1700)
+ {
+   robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+   if(fabs(twoBar.get_position()) >= 1800)
+   {
+     twoBar.move(127);
+   }
+   else if(fabs(twoBar.get_position()) >= 1780)
+   {
+     twoBar.move(60);
+   }
+   else
+   {
+     twoBar.move(30);
+   }
+ }
+ 
+tilt.move(9);
+twoBar.move(0);
+ liftBottom = false;
+ liftMid = true;
+liftTop = false;
+}
+//mid to bottom
+ if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && (liftMid == true))
+{
+robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+ tilt.move(-9);
+ while(fabs(twoBar.get_position()) >= 150)
+ {
+   robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
+   if(fabs(twoBar.get_position()) >= 500)
+   {
+     twoBar.move(127);
+   }
+   else if(fabs(twoBar.get_position()) >= 400)
+   {
+     twoBar.move(60);
+   }
+   else
+   {
+     twoBar.move(30);
+   }
+ }
+ tilt.move(9);
+ twoBar.move(0);
+ liftBottom = true;
+ liftMid = false;
+liftTop = false;
+}
+*/
 	}
 }

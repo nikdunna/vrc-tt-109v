@@ -5,12 +5,12 @@
 //pros::Vision visSensor(19, pros::vision_zero(1));
 
 //Motors
-pros::Motor tilt(12, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
-//pros::Motor twoBar(3, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
-pros::Motor rightIn(15, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor tilt(2, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor twoBar(10, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor rightIn(5, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor leftIn(7, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-Motor tilter(12);
-Motor twoBar(16);
+//Motor tilter();
+//Motor twoBar(10);
 
 
 //Controller (Defined two times for okapi uses)
@@ -20,11 +20,11 @@ Controller controller;
 
 //Sensors
 
-
+  
 
 //Drive Motors
-MotorGroup left = MotorGroup({18, 17});
-MotorGroup right = MotorGroup({-13, -14});
+MotorGroup left = MotorGroup({9, 6});
+MotorGroup right = MotorGroup({-3, -1});
 
 //DEFINE CHASSIS//
 ChassisControllerPID robotChassis = ChassisControllerFactory::create(
@@ -124,7 +124,7 @@ void encoderReset()
     task::sleep(10);
   }
 }*/
-
+/*
 void move2bMac(void *x)
 {
     
@@ -140,7 +140,8 @@ void move2bMac(void *x)
       
       if(lowTower)
       {
-         moveToHigh();
+        // moveToHigh();
+        twoBar.moveAbsolute(-830, 200);
          
       }
       else
@@ -173,6 +174,7 @@ void moveToLow()
   tilterMac.resume();
 }
 */
+/*
 void move2bMacLow(void *x)
 {
     
@@ -189,7 +191,9 @@ void move2bMacLow(void *x)
       
       if(lowTower)
       {
-        moveToLow();
+        twoBar.moveAbsolute(-570, 200);
+      //  moveToLow();
+
       }
       else
       {  
@@ -208,7 +212,8 @@ void move2bMacLow(void *x)
     
        
 }
-
+*/
+/*
 void tiltMac(void *flob)
 {
     
@@ -243,26 +248,30 @@ void tiltMac(void *flob)
            }
            hit = false;
         }
-      
+      /*
 	    else if(tilt.get_position() < -500)
 		{
 			tilt = -tiltSpeed / 1.5;
 		}
+    */
+   /*
       else
 		{
 			tilt = -tiltSpeed;
 		}
   
-         if(tilt.get_position() < -680 && tiltSpeed > 3)
+         if(tilt.get_position() < -1300 && tiltSpeed > 3)
         {
 
-            tilt = 0;
+           tilt = 0;
         }
         else if(tilt.get_position() > -10)
         {
-          tilt = 3;
+         tilt = 3;
         }
-		
+        
     }
+   
     
 }
+*/

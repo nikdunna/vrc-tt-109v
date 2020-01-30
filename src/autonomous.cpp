@@ -4,6 +4,19 @@
 void autonomous() {
   /*
   //RED LONG AUTON
+  rightIn = 200;
+		  leftIn = -200;
+      pros::delay(400);
+      twoBar.move(-127);
+      pros::delay(100);
+      pros::delay(500);
+      twoBar.move(0);
+      pros::delay(50);
+      twoBar.move(100);
+      pros::delay(500);
+      rightIn = 0;
+		  leftIn = 0;
+      twoBar.move(0);
     robotChassis.setMaxVelocity(80);
 	tilt = 7;
 	rightIn = -127;
@@ -39,12 +52,12 @@ void autonomous() {
   pros::delay(120);
   rightIn = 0;
   leftIn = 0;
-	while(tilt.get_position() > -500)
+	while(tilt.get_position() > -1300)
            {
              tilt = -100;
              pros::delay(10);
            }
-    while(tilt.get_position() < -500 && tilt.get_position() > -730)
+    while(tilt.get_position() < -1300 && tilt.get_position() > -1570)
            {
                tilt = -80;
                pros::delay(10);
@@ -60,11 +73,25 @@ void autonomous() {
            }
            tilt = 0;
     robotChassis.setMaxVelocity(200);
+
+
 */
-
-
+/*
 
            //BLUE LONG AUTON
+           rightIn = 200;
+		  leftIn = -200;
+      pros::delay(400);
+      twoBar.move(-127);
+      pros::delay(100);
+      pros::delay(500);
+      twoBar.move(0);
+      pros::delay(50);
+      twoBar.move(100);
+      pros::delay(500);
+      rightIn = 0;
+		  leftIn = 0;
+      twoBar.move(0);
            robotChassis.setMaxVelocity(80);
 	tilt = 7;
 	rightIn = -127;
@@ -100,12 +127,13 @@ void autonomous() {
   pros::delay(120);
   rightIn = 0;
   leftIn = 0;
-	while(tilt.get_position() > -500)
+  
+	while(tilt.get_position() > -1300)
            {
              tilt = -100;
              pros::delay(10);
            }
-    while(tilt.get_position() < -500 && tilt.get_position() > -730)
+    while(tilt.get_position() < -1300 && tilt.get_position() > -1570)
            {
                tilt = -80;
                pros::delay(10);
@@ -120,22 +148,39 @@ void autonomous() {
                pros::delay(10);
            }
            tilt = 0;
-           robotChassis.setMaxVelocity(200);
+           
 		}
-    
 
-  
- /*
+  */
+
+  //PUSH IN CUBE
+ rightIn = 200;
+		  leftIn = -200;
+      pros::delay(400);
+      twoBar.move(-127);
+      pros::delay(100);
+      pros::delay(500);
+      twoBar.move(0);
+      pros::delay(50);
+      twoBar.move(100);
+      pros::delay(500);
+      rightIn = 0;
+		  leftIn = 0;
+      twoBar.move(0);
   right.moveVelocity(-100);
   left.moveVelocity(-100);
-  pros::delay(2000);
+  pros::delay(1000);
   right.moveVelocity(0);
   left.moveVelocity(0);
   pros::delay(700);
   right.moveVelocity(100);
   left.moveVelocity(100);
-  pros::delay(2000);
+  pros::delay(1500);
   right.moveVelocity(0);
   left.moveVelocity(0);
-  */
+  }
+
+
+
+
 

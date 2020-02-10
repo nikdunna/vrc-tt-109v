@@ -5,23 +5,23 @@ inline void intake()
 {
 	if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1))
 	{
-		rightIn = -100;
-		leftIn = 100;
+		rightIn.move(-127);
+		leftIn.move(127);
 	}
 	else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
 	{
-		rightIn = 100;
-		leftIn = -100;
+		rightIn.move(127);
+		leftIn.move(-127);
 	}
 	else if(tilt.get_position() > -50)
 	{
-		rightIn = -10;
-		leftIn =  10;
+		rightIn.move(-15);
+		leftIn.move(15);
 	}
 	else
 	{
-		rightIn = 0;
-		leftIn =  0;
+		rightIn.move(0);
+		leftIn.move(0);
 		
 	}
 	
@@ -85,9 +85,10 @@ void moveToHigh()
 */
 
 
-    
+  
 void opcontrol()
 {
+  
     bool liftTop = false;
 	bool liftMid = false;
 	bool liftBottom = true;
@@ -98,12 +99,17 @@ void opcontrol()
 //pros::Task twoBarMacLow(move2bMacLow, NULL, "2bLow");
 
 	int tiltSpeed;
+ background = lv_page_create(NULL, NULL);
+  lv_scr_load(background);
 
-
+  lv_obj_t * Position = lv_label_create(background, NULL);
+	lv_obj_align(Position, NULL, LV_ALIGN_OUT_TOP_MID, 0, 0);
 	while(true)
 	{
-		//std::cout << "Tilt Position: " << tilt.get_position()  << "bruh\n";
-		std::cout << "Arm Position: " << twoBar.get_position() << "\n";
+		std::cout << "Tilt Position: " << tilt.get_position()  << "\n";
+		//std::cout << "Arm Position: " << twoBar.get_position() << "\n";
+
+  //  lv_label_set_text(Position,"Target Motor Position - " + tilt.get_position());
 		
     //Deploy
     if(master.get_digital(pros::E_CONTROLLER_DIGITAL_UP))
@@ -127,24 +133,236 @@ void opcontrol()
 
 		robotChassis.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::leftX));
 
-		//TILT
-	/*
+		//AUTON
+
+	if(master.get_digital(pros::E_CONTROLLER_DIGITAL_X))
+  {
+    robotChassis.driveVector(0.3, -0.4);
+    pros::delay(670);
+  }
+
+
+
 	    if(master.get_digital(pros::E_CONTROLLER_DIGITAL_Y))
 		{
-			tilt.move_velocity(-200);
-		}
-		else if(master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN))
-		{
-			tilt.move_velocity(200);
-		}
-		else
-		{
-			tilt.move_velocity(0);
-		}
-		*/
+      ///BLUE AUTON
+      
+      
+      twoBar.move(5);
+      pros::delay(50);
+
+       rightIn = -200;
+		  leftIn = 200;
+      
+      pros::delay(1500);
+      left.moveVelocity(65);
+      right.moveVelocity(65);
+      pros::delay(2700);
+      robotChassis.stop();
+      pros::delay(400);
+      left.tarePosition();
+			right.tarePosition();
+      robotChassis.setMaxVelocity(150);
+   robotChassis.turnAngle(22_deg);
+
+      pros::delay(300);
+       left.moveVelocity(80);
+      right.moveVelocity(80);
+      pros::delay(700);
+      robotChassis.stop();
+      pros::delay(300);
+       left.moveVelocity(-80);
+      right.moveVelocity(-80);
+      pros::delay(700);
+      left.tarePosition();
+			right.tarePosition();
+      robotChassis.turnAngle(-30_deg);
+      robotChassis.setMaxVelocity(200);
+
+      pros::delay(300);
+      left.moveVelocity(-200);
+      right.moveVelocity(-200);
+      pros::delay(450);
+      rightIn = 0;
+		  leftIn = 0;
+      pros::delay(100);
+      left.moveVelocity(-120);
+      right.moveVelocity(-120);
+      pros::delay(1050);
+      robotChassis.stop();
+      pros::delay(500);
+      left.tarePosition();
+			right.tarePosition();
+    robotChassis.driveVector(0.3, -0.4);
+    pros::delay(670);
+      left.moveVelocity(100);
+      right.moveVelocity(100);
+      pros::delay(400);
+      robotChassis.stop();
+       rightIn = 70;
+  leftIn = -70;
+  pros::delay(100);
+  rightIn = 0;
+  leftIn = 0;
+  pros::delay(100);
+	while(tilt.get_position() > -1300)
+           {
+             tilt = -100;
+             pros::delay(10);
+           }
+    while(tilt.get_position() < -1200 && tilt.get_position() > -3900)
+           {
+               tilt = -60;
+               pros::delay(10);
+           }
+           tilt = 0;
+            left.moveVelocity(60);
+      right.moveVelocity(60);
+      pros::delay(250);
+      robotChassis.stop();
+    
+           pros::delay(400);
+           rightIn = 127;
+  leftIn = -127;
+  left.moveVelocity(-200);
+      right.moveVelocity(-200);
+      pros::delay(500);
+      robotChassis.stop();
+      rightIn = 0;
+  leftIn = 0;
+
+
+
+  
+  //RED AUTON
+ /*
+rightIn = 200;
+		  leftIn = -200;
+      pros::delay(400);
+      twoBar.move(-127);
+      pros::delay(200);
+rightIn = 0;
+		  leftIn = 0;
+      pros::delay(400);
+      twoBar.move(0);
+      pros::delay(50);
+      twoBar.move(100);
+      pros::delay(700);
+
+
+    
+      twoBar.move(5);
+      pros::delay(50);
+
+       rightIn = -200;
+		  leftIn = 200;
+      
+      
+      left.moveVelocity(65);
+      right.moveVelocity(65);
+      pros::delay(2700);
+      robotChassis.stop();
+      pros::delay(400);
+      left.tarePosition();
+			right.tarePosition();
+      robotChassis.setMaxVelocity(150);
+   robotChassis.turnAngle(-23_deg);
+
+      pros::delay(300);
+       left.moveVelocity(80);
+      right.moveVelocity(80);
+      pros::delay(700);
+      robotChassis.stop();
+      pros::delay(300);
+      left.tarePosition();
+			right.tarePosition();
+      robotChassis.turnAngle(20_deg);
+      robotChassis.setMaxVelocity(200);
+
+      pros::delay(300);
+      left.moveVelocity(-200);
+      right.moveVelocity(-200);
+      pros::delay(450);
+      rightIn = 0;
+		  leftIn = 0;
+      pros::delay(100);
+      left.moveVelocity(-120);
+      right.moveVelocity(-120);
+      pros::delay(1050);
+      robotChassis.stop();
+      pros::delay(500);
+      left.tarePosition();
+			right.tarePosition();
+      robotChassis.setMaxVelocity(90);
+      robotChassis.turnAngle(120_deg);
+      robotChassis.setMaxVelocity(200);
+      pros::delay(100);
+      left.moveVelocity(70);
+      right.moveVelocity(70);
+      pros::delay(300);
+       rightIn = 100;
+  leftIn = -100;
+  pros::delay(400);
+  robotChassis.stop();
+  rightIn = 0;
+  leftIn = 0;
+  pros::delay(100);
+	while(tilt.get_position() > -1300)
+           {
+             tilt = -120;
+             pros::delay(10);
+           }
+    while(tilt.get_position() < -1200 && tilt.get_position() > -3900)
+           {
+               tilt = -70;
+               pros::delay(10);
+           }
+           tilt = 0;
+            left.moveVelocity(40);
+      right.moveVelocity(40);
+      pros::delay(250);
+      robotChassis.stop();
+    
+           //pros::delay(400);
+           rightIn = 127;
+  leftIn = -127;
+  left.moveVelocity(-200);
+      right.moveVelocity(-200);
+      pros::delay(500);
+      robotChassis.stop();
+      rightIn = 0;
+  leftIn = 0;
+
+*/
+
+      
+
+
+      /*
+     robotChassis.driveVector(0.85 ,0.75);
+     pros::delay(1100);
+     //robotChassis.driveVector(1 ,0.8);
+     */
+     
+    }
+
+      if(master.get_digital(pros::E_CONTROLLER_DIGITAL_X))
+      {
+         while(tilt.get_position() > -1500)
+           {
+             tilt.move(-127);
+             pros::delay(10);
+           }
+           while(tilt.get_position() < -1400 && tilt.get_position() > -1500)
+           {
+               tilt.move(60);
+               pros::delay(10);
+           }
+      }
 
        tiltSpeed = master.get_analog(ANALOG_RIGHT_Y);
-			
+       tilt = -tiltSpeed;
+			/*
       if(tilt.get_position() < -1620)
       {
         tilt = 0;
@@ -157,7 +375,7 @@ void opcontrol()
       {
         tilt = -tiltSpeed;
       }
-      
+      */
       
 	
 

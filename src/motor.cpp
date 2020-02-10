@@ -5,10 +5,10 @@
 //pros::Vision visSensor(19, pros::vision_zero(1));
 
 //Motors
-pros::Motor tilt(2, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
-pros::Motor twoBar(10, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
-pros::Motor rightIn(5, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor leftIn(7, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor tilt(4, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor twoBar(21, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_COUNTS);
+pros::Motor rightIn(11, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor leftIn(10, pros::E_MOTOR_GEARSET_36, false, pros::E_MOTOR_ENCODER_DEGREES);
 //Motor tilter();
 //Motor twoBar(10);
 
@@ -23,26 +23,27 @@ Controller controller;
   
 
 //Drive Motors
-MotorGroup left = MotorGroup({9, 6});
-MotorGroup right = MotorGroup({-3, -1});
+MotorGroup left = MotorGroup({19, 2});
+MotorGroup right = MotorGroup({-12, -3});
 
 //DEFINE CHASSIS//
 ChassisControllerPID robotChassis = ChassisControllerFactory::create(
   left, right,
-  IterativePosPIDController::Gains{0.005, 0.004, 0.00015}, //0.001, 0.0005, 0.00005      0.7...0.0003
+  IterativePosPIDController::Gains{0.003, 0.004, 0.00015}, //0.001, 0.0005, 0.00005      0.7...0.0003
   IterativePosPIDController::Gains{0, 0, 0},
-  IterativePosPIDController::Gains{0.0066, 0, 0}, //0.0056 , 0.0057, 0
+  IterativePosPIDController::Gains{0.0029, 0.000011, -0.000001}, //0.0056 , 0.0057, 0
   AbstractMotor::gearset::green,
-  {4_in, 9_in}
+  {4_in, 12.546_in}
 );
 
 
 AsyncMotionProfileController profileController = AsyncControllerFactory::motionProfile(
-  2.0,  // Maximum linear velocity of the Chassis in m/s
-  4.0,  // Maximum linear acceleration of the Chassis in m/s/s
-  4.0, // Maximum linear jerk of the Chassis in m/s/s/s
+  4.0,  // Maximum linear velocity of the Chassis in m/s 1.06
+  4.0,  // Maximum linear acceleration of the Chassis in m/s/s 0.83
+  4.0, // Maximum linear jerk of the Chassis in m/s/s/s 0.5
   robotChassis // Chassis Controller
 );
+
 
 
 

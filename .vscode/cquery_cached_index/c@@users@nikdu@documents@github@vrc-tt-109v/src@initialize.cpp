@@ -1,5 +1,5 @@
 #include "main.h"
-
+/*
 lv_theme_t * theme = lv_theme_alien_init(210, NULL);
 
 int autonNumber = 10;
@@ -58,6 +58,7 @@ void selectAuton()
   lv_label_set_text(label, "Red Back");
   lv_obj_align(redBackButtonNoPark, redBackButton, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
 */
+/*
   //Create Button to Select Blue Front Auton
   lv_obj_t * blueFrontButton = lv_btn_create(lv_scr_act(), redFrontButton);
   label = lv_label_create(blueFrontButton, NULL);
@@ -77,6 +78,7 @@ void selectAuton()
   lv_obj_align(blueBackButtonNoPark, blueBackButton, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
 
 */
+/*
   //Create Button to Select Programming Skills 
   lv_obj_t * skillsButton = lv_btn_create(lv_scr_act(), NULL);
   label = lv_label_create(skillsButton,NULL);
@@ -105,8 +107,8 @@ void selectAuton()
    lv_obj_set_free_num(skillsButton, 0);
 }
 
-
-
+*/
+  
 void initialize() {
 
 }
@@ -128,5 +130,5 @@ void disabled() {}
  * starts.
  **/
 void competition_initialize() {
- selectAuton();
+ //selectAuton();
 }
